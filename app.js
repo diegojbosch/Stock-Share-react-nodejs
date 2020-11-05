@@ -17,8 +17,9 @@ app.get('/api/v1.0/company-outlook', function(req, res) {
 		console.log('body:', body);
 
 		var jsonResponse = JSON.parse(body);
-		
-		res.send(jsonResponse);
+		var companyOutlook = '{ "companyName": "' + jsonResponse.name + '", "stockTickerSymbol": "' + jsonResponse.ticker + '", "stockExchangeCode": "' + jsonResponse.exchangeCode + '", "companyStartDate": "' + jsonResponse.startDate + '", "description": "' + jsonResponse.description + '" }';
+
+		res.send(JSON.parse(companyOutlook));
 	})
 });
 
@@ -33,8 +34,9 @@ app.get('/api/v1.0/stock-information', function(req, res) {
 		console.log('body:', body);
 
 		var jsonResponse = JSON.parse(body);
+		var stockInformation = '{"stockTickerSymbol": "' + jsonResponse[0]['ticker'] + '", "tradingDay": "' + jsonResponse[0]['timestamp'] + '", "previousClosingPrice": "' + jsonResponse[0]['prevClose'] + '", "openingPrice": "' + jsonResponse[0]['open'] + '", "highPrice": "' + jsonResponse[0]['high'] + '", "lowPrice": "' + jsonResponse[0]['low'] + '", "lastPrice": "' + jsonResponse[0]['last'] + '", "change": "' + (jsonResponse[0]['last'] - jsonResponse[0]['prevClose']) + '", "changePercent": "' + ((jsonResponse[0]['last'] - jsonResponse[0]['prevClose']) / jsonResponse[0]['prevClose']) * 100 + '", "numberSharesTraded": "' + jsonResponse[0]['volume'] + '"}';
 		
-		res.send(jsonResponse);
+		res.send(stockInformation);
 	})
 });
 
@@ -51,8 +53,16 @@ app.get('/api/v1.0/stock-prices', function(req, res) {
 		console.log('body:', body);
 
 		var jsonResponse = JSON.parse(body);
+		var stockPrices = '[';
+		var data;
 		
-		res.send(jsonResponse);
+		for (data in jsonResponse) {
+			console.log(data);
+			stockPrices += '[' + data['close'] + ']';
+		}
+		
+		stockPrices += ']';
+		res.send(stockPrices);
 	})
 });
 
