@@ -56,12 +56,12 @@ app.get('/api/v1.0/stock-prices', function(req, res) {
 		var stockPrices = '[';
 		var data;
 		
-		for (data in jsonResponse) {
+		for (data of jsonResponse) {
 			console.log(data);
-			stockPrices += '[' + data['close'] + ']';
+			stockPrices += '[' + Date.now() + ',' + data['close'] + '],';
 		}
-		
-		stockPrices += ']';
+
+		stockPrices = stockPrices.slice(0, -1) + ']';
 		res.send(stockPrices);
 	})
 });
@@ -78,7 +78,14 @@ app.get('/api/v1.0/news-articles', function(req, res) {
 
 		var jsonResponse = JSON.parse(body);
 		
-		res.send(jsonResponse);
+		var newsArticles = '[';
+		for (article of jsonResponse.articles) {
+			console.log('jsonResponse: ', article.title);
+			newsArticles += '{"image": "' + article.urlToImage + '", "title": "' + article.title + '", "data": "' + article.publishedAt + '", "linkOriginalPost": "' + article.url + '"},';
+		}
+		newsArticles = newsArticles.slice(0, -1) + ']';
+		
+		res.send(newsArticles);
 	})
 });
 
